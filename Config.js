@@ -85,7 +85,7 @@ const charOwners = {
 const charData = [
     {
         id: 'p1',
-        name: '가나다',
+        name: '에제키엘',
         title: 'A그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=가나다',
         quote: '첫 번째 캐릭터의 대사를 여기에 입력하세요.',
@@ -94,7 +94,7 @@ const charData = [
     },
     {
         id: 'p2',
-        name: '다라마',
+        name: '엘린',
         title: 'A그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=다라마',
         quote: '두 번째 캐릭터의 대사를 여기에 입력하세요.',
