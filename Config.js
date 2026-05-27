@@ -63,11 +63,11 @@ const adminEmails = ['0parkg00@gmail.com'];
    사용자가 로그인하면 자신의 캐릭터를 편집할 수 있게 됩니다.
 ───────────────────────────────────────────────────────────────── */
 const charOwners = {
-    'player2@example.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
+    'ezekielangel@gmail.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
     '0parkg00@gmail.com': 'char-p2',   /* 플레이어 2 → 캐릭터 다라 */
-    'player3@example.com': 'char-p3',   /* 플레이어 3 → 캐릭터 마바 */
-    'player4@example.com': 'char-p4',   /* 플레이어 4 → 캐릭터 사아 */
-    'admin@example.com':   'char-p5',   /* 관리자도 캐릭터를 가질 수 있습니다 */
+    'bathshebaangel@gmail.com': 'char-p3',   /* 플레이어 3 → 캐릭터 마바 */
+    'eiraangel@gmail.com': 'char-p4',   /* 플레이어 4 → 캐릭터 사아 */
+    'felghaangel@gmail.com':   'char-p5',   /* 관리자도 캐릭터를 가질 수 있습니다 */
 };
 
 
@@ -116,6 +116,15 @@ const charData = [
         title: 'A그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=사아자',
         quote: '네 번째 캐릭터의 대사를 여기에 입력하세요.',
+        stats: '55,50,65,60,75,55,65,70',
+        color: '140, 140, 140',
+    },
+     {
+        id: 'p5',
+        name: '펠가',
+        title: 'A그룹',
+        img: 'https://placehold.co/300x400/1a1a1a/888888?text=사아자',
+        quote: '다섯 번째 캐릭터의 대사를 여기에 입력하세요.',
         stats: '55,50,65,60,75,55,65,70',
         color: '140, 140, 140',
     },
