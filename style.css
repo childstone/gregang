@@ -927,17 +927,20 @@ summary { font-weight: 700; cursor: pointer; color: #aaa; outline: none; letter-
 
 /* ── 라이트 모드 ── */
 body.light-mode {
-    --bg-color:     #f0f0f0;
+    --bg-color:     #f3f3f3;
     --sidebar-bg:   #ffffff;
     --content-bg:   #ffffff;
-    --text-main:    #1a1a1a;
-    --text-sub:     #666666;
-    --accent-color: #333333;
+    --text-main:    #333333;
+    --text-sub:     #777777;
+    --accent-color: #777777;
     --border-color: rgba(0,0,0,0.08);
     --shadow:       0 6px 20px rgba(0,0,0,0.08);
 }
-body.light-mode .nav-btn.active      { background: #222; color: #fff; }
-body.light-mode .phase-btn.active    { background: #222; color: #fff; border-color: #222; }
+body.light-mode .nav-btn.active      { background: #d8d8d8;
+    color: #222; }
+body.light-mode .phase-btn.active    { background: #d8d8d8;
+    color: #222;
+    border-color: #c8c8c8; }
 body.light-mode .sidebar-column h1.char-name { color: #222; }
 body.light-mode .content-card h2     { color: #333; }
 body.light-mode .info-value          { color: #222; }
