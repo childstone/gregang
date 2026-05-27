@@ -333,112 +333,85 @@
       <!-- ════════════════════════════════════════
            Characters 섹션 — NPC 인물 카드
       ════════════════════════════════════════ -->
-      <section id="NPC" class="content-card">
+<section id="NPC" class="content-card">
 
-        <div class="phase-tabs">
-          <button class="phase-btn active" onclick="changePhase(this,0)">Chapter 1</button>
-          <button class="phase-btn" onclick="changePhase(this,1)">Chapter 2</button>
-          <button class="phase-btn" onclick="changePhase(this,2)">Chapter 3</button>
-          <button class="phase-btn" onclick="changePhase(this,3)">Chapter 4</button>
+  <div class="phase-tabs">
+    <button class="phase-btn active" onclick="changePhase(this,0)">Chapter 1</button>
+    <button class="phase-btn" onclick="changePhase(this,1)">Chapter 2</button>
+    <button class="phase-btn" onclick="changePhase(this,2)">Chapter 3</button>
+    <button class="phase-btn" onclick="changePhase(this,3)">Chapter 4</button>
+  </div>
+
+  <div class="phase-content-wrapper">
+
+    <div class="phase-slide active">
+      <h2>NPCs — Chapter 1</h2>
+
+      <div class="relation-grid">
+
+        <div class="relation-card" data-relation="neutral">
+          <img src="https://i.ibb.co/S4P7b9FZ/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">시몬 (Simon)</div>
+          <div class="relation-desc">남성 59세 178cm 14대 법왕</div>
         </div>
 
-        <div class="phase-content-wrapper">
-
-          <div class="phase-slide active">
-            <h2>NPCs — Chapter 1</h2>
-            <!-- ✏️ relation-card를 복사해서 NPC를 추가하세요
-                 data-relation 값으로 뱃지 색상이 결정됩니다 -->
-            <div class="relation-grid">
-              <div class="relation-card" data-relation="neutral">
-                <img
-                  src="https://i.ibb.co/S4P7b9FZ/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">시몬 (Simon)</div>
-                <div class="relation-desc"> 남성 59세 178cm 14대 법왕</div>
-              </div>
-
-              <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/Lzz1ppRg/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">피에토 (Pieto)</div>
-                <div class="relation-desc">남성 54세 195cm 파빌리움에서 손꼽히는 대장장이.  에제키엘의 아버지이며 왼손 출신이었으나 현재 오른팔 거주 중. 잿불 기사단의 무기는 피에토가 제작했다. </div>
-              </div>
-
-                  <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/N6LT6MRw/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">딘 (Dean)</div>
-                <div class="relation-desc">남성 에제키엘과 같은 나이 181cm 오른팔 출신. 잿불 기사단원 중 한 명. 에제키엘의 소꿉친구 </div>
-              </div>
-                 
-                 <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/4RvV03G8/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">키아라 (Chiara)</div>
-                <div class="relation-desc">여성 엘린보다 두 살 아래 169cm 왼손 출신. 잿불 기사단원 중 한 명. 엘린과 같은 마을 출신의 친구. </div>
-              </div>
-                 
-                  <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/Df8N1s1y/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">호르헤 (Jorge) </div>
-                <div class="relation-desc">여성 30세 187cm 척추 출신. 잿불 기사단원 중 한 명. 밧세바와 같은 마을 출신의 친구.</div>
-              </div>
-
-               <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/M5nPwxtt/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">클레멘트 (Clement)</div>
-                <div class="relation-desc">여성 에이라와 같은 나이. 156cm 머리의 이동 사제. 에이라와 같은 마을 출신이었다. 현재 신전 거주 중.</div>
-              </div>
-                   <div class="relation-card" data-relation="hostile">
-                <img
-                  src="https://i.ibb.co/M5nPwxtt/unnamed.png"
-                  class="relation-avatar"
-                  onclick="openLightbox(this.src)"
-                >
-                <div class="relation-name">레무엘 (Lemuel)</div>
-                <div class="relation-desc">여성 12세 126cm. 척추 출신, 밧세바의 동생.</div>
-              </div>
-    
-            </div>
-          </div>
-
-          <div class="phase-slide">
-            <h2>NPCs — Chapter 2</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
-          </div>
-          <div class="phase-slide">
-            <h2>NPCs — Chapter 3</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
-          </div>
-
-          <div class="phase-slide">
-            <h2>NPCs — Chapter 4</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
-          </div>
-
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/Lzz1ppRg/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">피에토 (Pieto)</div>
+          <div class="relation-desc">남성 54세 195cm 파빌리움에서 손꼽히는 대장장이. 에제키엘의 아버지이며 왼손 출신이었으나 현재 오른팔 거주 중. 잿불 기사단의 무기는 피에토가 제작했다.</div>
         </div>
-      </section><!-- /NPC -->
 
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/N6LT6MRw/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">딘 (Dean)</div>
+          <div class="relation-desc">남성 에제키엘과 같은 나이 181cm 오른팔 출신. 잿불 기사단원 중 한 명. 에제키엘의 소꿉친구</div>
+        </div>
 
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/4RvV03G8/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">키아라 (Chiara)</div>
+          <div class="relation-desc">여성 엘린보다 두 살 아래 169cm 왼손 출신. 잿불 기사단원 중 한 명. 엘린과 같은 마을 출신의 친구.</div>
+        </div>
+
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/Df8N1s1y/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">호르헤 (Jorge)</div>
+          <div class="relation-desc">여성 30세 187cm 척추 출신. 잿불 기사단원 중 한 명. 밧세바와 같은 마을 출신의 친구.</div>
+        </div>
+
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/M5nPwxtt/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">클레멘트 (Clement)</div>
+          <div class="relation-desc">여성 에이라와 같은 나이. 156cm 머리의 이동 사제. 에이라와 같은 마을 출신이었다. 현재 신전 거주 중.</div>
+        </div>
+
+        <div class="relation-card" data-relation="hostile">
+          <img src="https://i.ibb.co/M5nPwxtt/unnamed.png" class="relation-avatar" onclick="openLightbox(this.src)">
+          <div class="relation-name">레무엘 (Lemuel)</div>
+          <div class="relation-desc">여성 12세 126cm. 척추 출신, 밧세바의 동생.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="phase-slide">
+      <h2>NPCs — Chapter 2</h2>
+      <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
+    </div>
+
+    <div class="phase-slide">
+      <h2>NPCs — Chapter 3</h2>
+      <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
+    </div>
+
+    <div class="phase-slide">
+      <h2>NPCs — Chapter 4</h2>
+      <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
+    </div>
+
+  </div>
+</section>
+<!-- /NPC -->
       <!-- ════════════════════════════════════════
            Relations 섹션 — SVG 관계도
            Map.js가 노드·엣지 렌더링 처리
