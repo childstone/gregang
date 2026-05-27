@@ -42,7 +42,7 @@ try {
 ───────────────────────────────────────────────────────────────── */
 window.APP_CONFIG = {
     /* 관리자 이메일 목록 — 소지금 편집 등 특수 권한을 가집니다 */
-    ADMIN_EMAILS: ['관리자 아이디'],
+    ADMIN_EMAILS: ['0parkg00@gmail.com'],
 
     /* 기본으로 표시할 타임라인 번호 (0 = 1부, 1 = 2부, ...) */
     DEFAULT_PHASE: 0
@@ -54,7 +54,7 @@ window.isAdmin = function () {
 };
 
 /* 관리자 이메일 목록 (Auth.js에서도 직접 참조합니다) */
-const adminEmails = ['관리자 아이디'];
+const adminEmails = ['0parkg00@gmail.com'];
 
 
 /* ─────────────────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ const adminEmails = ['관리자 아이디'];
 ───────────────────────────────────────────────────────────────── */
 const charOwners = {
     'player2@example.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
-    'player2@example.com': 'char-p2',   /* 플레이어 2 → 캐릭터 다라 */
+    '0parkg00@gmail.com': 'char-p2',   /* 플레이어 2 → 캐릭터 다라 */
     'player3@example.com': 'char-p3',   /* 플레이어 3 → 캐릭터 마바 */
     'player4@example.com': 'char-p4',   /* 플레이어 4 → 캐릭터 사아 */
     'admin@example.com':   'char-p5',   /* 관리자도 캐릭터를 가질 수 있습니다 */
