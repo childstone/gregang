@@ -664,7 +664,7 @@ summary { font-weight: 700; cursor: pointer; color: #aaa; outline: none; letter-
 }
 
 .shop-item-title, .relation-name { color: #ccc; font-size: 1rem; margin-bottom: 6px; font-weight: 600; }
-.shop-item-desc,  .relation-desc  { color: #555; font-size: 0.8rem; margin-bottom: 10px; line-height: 1.5; }
+.shop-item-desc,  .relation-desc  { color: #888; font-size: 0.8rem; margin-bottom: 10px; line-height: 1.5; }
 .shop-item-price { font-size: 1rem; color: #888; margin-bottom: 14px; }
 
 /* 수량 조절 */
