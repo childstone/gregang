@@ -14,8 +14,8 @@
 :root {
     /* 색상 — 흑백 계열 */
     --bg-color:      #0d0d0d;   /* 페이지 최외곽 배경 */
-    --sidebar-bg:    #141414;   /* 사이드바 배경 */
-    --content-bg:    #141414;   /* 콘텐츠 카드 배경 */
+    --sidebar-bg:    #4B0000;   /* 사이드바 배경 */
+    --content-bg:    #4B0000;   /* 콘텐츠 카드 배경 */
     --text-main:     #e0e0e0;   /* 기본 텍스트 */
     --text-sub:      #666666;   /* 보조 텍스트 */
     --accent-color:  #cccccc;   /* 강조 색상 (흰색 계열) */
