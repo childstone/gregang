@@ -15,7 +15,11 @@
 function initCharacterPages() {
     var html = '<style>.stats-wrapper > *:not(.weapon-section):not(.inventory-section) { grid-column: 1; grid-row: 1; justify-self: center; align-self: center; margin-top:10px; }</style>';
     
-    charData.forEach(function (c) {
+    charData
+        .filter(function (c) {
+            return c.id.startsWith('p');
+        })
+        .forEach(function (c) {
         var slides = '';
         for (var i = 0; i < 4; i++) {
             slides +=
