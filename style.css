@@ -993,32 +993,3 @@ body.light-mode .character-img:hover { filter: none; }
     .post-main { flex-direction: column; }
     .post-img  { flex: none; width: 100%; max-width: 100%; }
 }
-
-.gallery-list-item {
-    padding: 16px 20px;
-}
-
-.gallery-list-item .post-main {
-    display: block;
-    margin-bottom: 8px;
-}
-
-.post-title {
-    color: #ddd;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.post-meta {
-    display: flex;
-    gap: 12px;
-    color: #555;
-    font-size: 0.78rem;
-    margin-bottom: 8px;
-}
-
-.gallery-list-item .post-content {
-    color: #888;
-    font-size: 0.88rem;
-}
