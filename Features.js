@@ -101,34 +101,60 @@ async function loadGalleryData(page) {
 
     currPosts.forEach(function (post) {
 
-    var postReplies = replies.filter(function (r) { return r.parent_id == post.id; });
-    var replyCount  = postReplies.length;
+        var postReplies = replies.filter(function (r) { return r.parent_id == post.id; });
+        var replyCount  = postReplies.length;
 
-    var dateText = post.created_at
-        ? new Date(post.created_at).toLocaleDateString('ko-KR')
-        : '';
+        var dateText = post.created_at
+            ? new Date(post.created_at).toLocaleString('ko-KR')
+            : '';
 
-    html +=
-        '<div class="gallery-post-container gallery-list-item">' +
-        '<div class="post-main">' +
-        '<div class="post-info">' +
-        '<div class="post-title">' + (post.title || '제목 없음') + '</div>' +
-        '<div class="post-meta">' +
-            '<span>' + post.char_name + '</span>' +
-            '<span>' + new Date(post.created_at).toLocaleString() + '</span>' +
-            '<span>답글 ' + replyCount + '</span>' +
-        '</div>' +
-        '<div class="post-content">' + (post.content || '') + '</div>' +
-                '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
-                    '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
-                    deleteBtn +
+        /* 본인 글이거나 관리자일 때만 삭제 버튼 표시 */
+        var deleteBtn = (myCharId && post.char_id === myCharId) || window.isAdmin()
+            ? '<button class="btn-delete" onclick="deleteGalleryPost(' + post.id + ')">삭제</button>'
+            : '';
+
+        /* 답글이 1개 이상 있을 때만 토글 버튼 표시 */
+        var toggleBtn = replyCount > 0
+            ? '<button class="btn-toggle" onclick="toggleReplies(' + post.id + ')">답글 ' + replyCount + '개 보기</button>'
+            : '';
+
+        /* 답글 카드 HTML 생성 */
+        var repliesHtml = postReplies.map(function (r) {
+            var rDate      = r.created_at ? new Date(r.created_at).toLocaleString('ko-KR') : '';
+            var rDeleteBtn = (myCharId && r.char_id === myCharId) || window.isAdmin()
+                ? '<button class="btn-delete" onclick="deleteGalleryPost(' + r.id + ')">삭제</button>'
+                : '';
+            return '<div class="reply-item">' +
+                       '<div class="post-meta">' +
+                           '<span>' + (r.char_name || '') + '</span>' +
+                           '<span>' + rDate + '</span>' +
+                       '</div>' +
+                       '<div class="post-content">' + (r.content || '') + '</div>' +
+                       rDeleteBtn +
+                   '</div>';
+        }).join('');
+
+        html +=
+            '<div class="gallery-post-container gallery-list-item">' +
+                '<div class="post-main">' +
+                    '<div class="post-info">' +
+                        '<div class="post-title">' + (post.title || '제목 없음') + '</div>' +
+                        '<div class="post-meta">' +
+                            '<span>' + (post.char_name || '') + '</span>' +
+                            '<span>' + dateText + '</span>' +
+                            '<span>답글 ' + replyCount + '</span>' +
+                        '</div>' +
+                        '<div class="post-content">' + (post.content || '') + '</div>' +
+                        '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
+                            '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
+                            deleteBtn +
+                        '</div>' +
+                        toggleBtn +
+                    '</div>' +
                 '</div>' +
-                toggleBtn +
-            '</div>' +
-        '</div>' +
-        '<div class="post-replies" id="replies-' + post.id + '" style="display:none;">' + repliesHtml + '</div>' +
-    '</div>';
-});
+                '<div class="post-replies" id="replies-' + post.id + '" style="display:none;">' + repliesHtml + '</div>' +
+            '</div>';
+    });
     if (totalPages > 1) {
         html += '<div class="gallery-pagination">';
         for (var i = 1; i <= totalPages; i++) {
