@@ -101,49 +101,47 @@ async function loadGalleryData(page) {
 
     currPosts.forEach(function (post) {
 
+        var isMine    = myCharId === post.char_id;
+        var deleteBtn = isMine
+            ? '<button class="btn-reply" onclick="deleteGalleryPost(' + post.id + ')">삭제</button>'
+            : '';
+
         var postReplies = replies.filter(function (r) { return r.parent_id == post.id; });
         var replyCount  = postReplies.length;
 
-        var dateText = post.created_at
-            ? new Date(post.created_at).toLocaleString('ko-KR')
-            : '';
-
-        /* 본인 글이거나 관리자일 때만 삭제 버튼 표시 */
-        var deleteBtn = (myCharId && post.char_id === myCharId) || window.isAdmin()
-            ? '<button class="btn-delete" onclick="deleteGalleryPost(' + post.id + ')">삭제</button>'
-            : '';
-
-        /* 답글이 1개 이상 있을 때만 토글 버튼 표시 */
+        /* 답글이 1개 이상이면 토글 버튼 생성 */
         var toggleBtn = replyCount > 0
-            ? '<button class="btn-toggle" onclick="toggleReplies(' + post.id + ')">답글 ' + replyCount + '개 보기</button>'
+            ? '<button class="btn-toggle-replies" onclick="toggleReplies(' + post.id + ')">답글 ' + replyCount + '개 보기</button>'
             : '';
 
-        /* 답글 카드 HTML 생성 */
+        /* 각 답글을 reply-item div 로 변환 */
         var repliesHtml = postReplies.map(function (r) {
-            var rDate      = r.created_at ? new Date(r.created_at).toLocaleString('ko-KR') : '';
-            var rDeleteBtn = (myCharId && r.char_id === myCharId) || window.isAdmin()
-                ? '<button class="btn-delete" onclick="deleteGalleryPost(' + r.id + ')">삭제</button>'
+            var isReplyMine    = myCharId === r.char_id;
+            var replyDeleteBtn = isReplyMine
+                ? '<button class="btn-reply" style="padding:4px 10px;font-size:0.75rem;margin-top:0;" onclick="deleteGalleryPost(' + r.id + ')">삭제</button>'
                 : '';
             return '<div class="reply-item">' +
-                       '<div class="post-meta">' +
-                           '<span>' + (r.char_name || '') + '</span>' +
-                           '<span>' + rDate + '</span>' +
-                       '</div>' +
-                       '<div class="post-content">' + (r.content || '') + '</div>' +
-                       rDeleteBtn +
-                   '</div>';
+                (r.image_url
+                    ? '<img src="' + r.image_url + '" class="reply-img" onclick="openLightbox(this.src)">'
+                    : '') +
+                '<div class="post-info">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                        '<div class="post-author" style="font-size:0.9rem;margin-bottom:0;">' + r.char_name + '</div>' +
+                        replyDeleteBtn +
+                    '</div>' +
+                    '<div class="post-content" style="font-size:0.9rem;margin-top:5px;">' + (r.content || '') + '</div>' +
+                '</div></div>';
         }).join('');
 
         html +=
-            '<div class="gallery-post-container gallery-list-item">' +
+            '<div class="gallery-post-container">' +
                 '<div class="post-main">' +
+                    (post.image_url
+                        ? '<img src="' + post.image_url + '" class="post-img" onclick="openLightbox(this.src)">'
+                        : '') +
                     '<div class="post-info">' +
-                        '<div class="post-title">' + (post.title || '제목 없음') + '</div>' +
-                        '<div class="post-meta">' +
-                            '<span>' + (post.char_name || '') + '</span>' +
-                            '<span>' + dateText + '</span>' +
-                            '<span>답글 ' + replyCount + '</span>' +
-                        '</div>' +
+                        '<div class="post-author">' + post.char_name + '</div>' +
+                        '<div class="post-date">'   + new Date(post.created_at).toLocaleString() + '</div>' +
                         '<div class="post-content">' + (post.content || '') + '</div>' +
                         '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
                             '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
@@ -152,9 +150,11 @@ async function loadGalleryData(page) {
                         toggleBtn +
                     '</div>' +
                 '</div>' +
+                /* 답글 컨테이너 — 기본 숨김, toggleReplies() 로 열고 닫음 */
                 '<div class="post-replies" id="replies-' + post.id + '" style="display:none;">' + repliesHtml + '</div>' +
             '</div>';
     });
+
     if (totalPages > 1) {
         html += '<div class="gallery-pagination">';
         for (var i = 1; i <= totalPages; i++) {
@@ -166,9 +166,7 @@ async function loadGalleryData(page) {
 
     container.innerHTML = html;
 }
-window.openGalleryPost = function (postId) {
-    alert('게시글 상세보기는 다음 단계에서 연결할 예정입니다. post id: ' + postId);
-};
+
 /*
  * [함수] toggleReplies
  *
@@ -225,10 +223,8 @@ window.uploadGalleryPost = async function () {
     var myCharId = charOwners[currentUser.email];
     if (!myCharId)                     return alert('권한이 없습니다.');
 
-    var title     = document.getElementById('gal-title').value.trim();
     var content   = document.getElementById('gal-content').value;
     var fileInput = document.getElementById('gal-file');
-    if (!title) return alert('제목을 입력해주세요.');
     if (!content && fileInput.files.length === 0) return alert('내용이나 이미지를 입력해주세요.');
 
     var uploadedUrl = null;
@@ -251,7 +247,6 @@ window.uploadGalleryPost = async function () {
     var res = await supabaseClient.from('gallery_posts').insert([{
         char_id:   myCharId,
         char_name: charName,
-        title:     title,
         content:   content,
         image_url: uploadedUrl,
         parent_id: null,               /* 본문이므로 null */
@@ -261,7 +256,6 @@ window.uploadGalleryPost = async function () {
     if (res.error) {
         alert('저장 실패');
     } else {
-        document.getElementById('gal-title').value   = '';
         document.getElementById('gal-content').value = '';
         document.getElementById('gal-file').value    = '';
         if (fileInput.files.length > 0) { event.target.innerText = '기록'; event.target.disabled = false; }
