@@ -109,14 +109,25 @@ async function loadGalleryData(page) {
         : '';
 
     html +=
-        '<div class="board-row" onclick="openGalleryPost(' + post.id + ')">' +
-            '<div class="board-title">' + (post.title || 'Untitled') + '</div>' +
-            '<div class="board-meta">' +
-                '<span>' + (post.char_name || '익명') + '</span>' +
-                '<span>' + dateText + '</span>' +
-                '<span>댓글 ' + replyCount + '</span>' +
+           '<div class="gallery-post-container gallery-list-item">' +
+        '<div class="post-main">' +
+            '<div class="post-info">' +
+                '<div class="post-title">' + (post.title || '제목 없음') + '</div>' +
+                '<div class="post-meta">' +
+                    '<span>' + post.char_name + '</span>' +
+                    '<span>' + new Date(post.created_at).toLocaleString() + '</span>' +
+                    '<span>답글 ' + replyCount + '</span>' +
+                '</div>' +
+                '<div class="post-content">' + (post.content || '') + '</div>' +
+                '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
+                    '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
+                    deleteBtn +
+                '</div>' +
+                toggleBtn +
             '</div>' +
-        '</div>';
+        '</div>' +
+        '<div class="post-replies" id="replies-' + post.id + '" style="display:none;">' + repliesHtml + '</div>' +
+    '</div>';
 });
     if (totalPages > 1) {
         html += '<div class="gallery-pagination">';
