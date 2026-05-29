@@ -110,15 +110,27 @@ async function loadGalleryData(page) {
         var title      = post.title || '(제목 없음)';
 
         html +=
-            '<div class="gallery-post-container" style="cursor:pointer;" onclick="openGalleryPostModal(' + post.id + ')">' +
-                '<div class="post-main">' +
-                    '<div class="post-info">' +
-                        '<div class="post-author">' + post.char_name + '</div>' +
-                        '<div style="font-size:1rem;color:#ccc;font-weight:bold;margin:4px 0;">' + title + '</div>' +
-                        '<div class="post-date">' + new Date(post.created_at).toLocaleString() + '</div>' +
-                        (replyCount > 0
-                            ? '<div style="font-size:0.8rem;color:#666;margin-top:4px;">답글 ' + replyCount + '개</div>'
-                            : '') +
+             '<div class="board-row" onclick="openGalleryPost(' + post.id + ')">' +
+
+        '<div class="board-title">' +
+            (post.title || '제목 없음') +
+        '</div>' +
+
+        '<div class="board-author">' +
+            (post.char_name || '익명') +
+        '</div>' +
+
+        '<div class="board-date">' +
+            new Date(post.created_at).toLocaleDateString() +
+        '</div>' +
+
+    '</div>';
+    });
+                        '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
+                            '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
+                            deleteBtn +
+                        '</div>' +
+                        toggleBtn +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -192,7 +204,7 @@ window.uploadGalleryPost = async function () {
     var myCharId = charOwners[currentUser.email];
     if (!myCharId)                     return alert('권한이 없습니다.');
 
-    var title     = document.getElementById('gal-title') ? document.getElementById('gal-title').value.trim() : '';
+    var title = document.getElementById('gal-title').value;
     var content   = document.getElementById('gal-content').value;
     var fileInput = document.getElementById('gal-file');
     if (!content && fileInput.files.length === 0) return alert('내용이나 이미지를 입력해주세요.');
@@ -215,6 +227,7 @@ window.uploadGalleryPost = async function () {
     }) || {}).name || '익명';
 
     var res = await supabaseClient.from('gallery_posts').insert([{
+        title:     title,
         char_id:   myCharId,
         char_name: charName,
         title:     title,
@@ -227,7 +240,7 @@ window.uploadGalleryPost = async function () {
     if (res.error) {
         alert('저장 실패');
     } else {
-        if (document.getElementById('gal-title')) document.getElementById('gal-title').value = '';
+        document.getElementById('gal-title').value = '';
         document.getElementById('gal-content').value = '';
         document.getElementById('gal-file').value    = '';
         if (fileInput.files.length > 0) { event.target.innerText = '기록'; event.target.disabled = false; }
@@ -2110,3 +2123,57 @@ if (typeof supabaseClient !== 'undefined' && supabaseClient) {
         )
         .subscribe();
 }
+
+window.openGalleryPost = async function(postId){
+
+    var result = await supabaseClient
+        .from('gallery_posts')
+        .select('*')
+        .eq('id', postId)
+        .single();
+
+    if(result.error || !result.data){
+        alert('게시글을 불러올 수 없습니다.');
+        return;
+    }
+
+    var post = result.data;
+
+    var repliesResult = await supabaseClient
+        .from('gallery_posts')
+        .select('*')
+        .eq('parent_id', postId)
+        .order('created_at',{ascending:true});
+
+    var replies = repliesResult.data || [];
+
+    var replyText = '';
+
+    replies.forEach(function(reply){
+
+        replyText +=
+
+            '\n\n────────────\n' +
+
+            (reply.char_name || '익명') +
+
+            '\n' +
+
+            (reply.content || '');
+
+    });
+
+    alert(
+        (post.title || '제목 없음') +
+
+        '\n\n작성자 : ' +
+
+        (post.char_name || '익명') +
+
+        '\n\n' +
+
+        (post.content || '') +
+
+        replyText
+    );
+};

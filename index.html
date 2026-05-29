@@ -1527,6 +1527,75 @@
   </div>
 </div><!-- /reply-modal -->
 
+<div id="post-modal" class="auth-overlay">
+
+  <div
+    class="auth-box"
+    style="
+      width:800px;
+      max-width:95vw;
+      max-height:90vh;
+      overflow-y:auto;
+    "
+  >
+
+    <span
+      class="auth-close"
+      onclick="closeModal('post-modal')"
+    >
+      &times;
+    </span>
+
+    <h2
+      id="modal-post-title"
+      style="
+        color:#ddd;
+        margin-bottom:10px;
+      "
+    >
+    </h2>
+
+    <div
+      id="modal-post-meta"
+      style="
+        color:#777;
+        margin-bottom:20px;
+      "
+    >
+    </div>
+
+    <img
+      id="modal-post-image"
+      style="
+        width:100%;
+        display:none;
+        border-radius:8px;
+        margin-bottom:20px;
+      "
+    >
+
+    <div
+      id="modal-post-content"
+      style="
+        white-space:pre-wrap;
+        line-height:1.8;
+        margin-bottom:25px;
+      "
+    >
+    </div>
+
+    <hr style="border-color:#333;">
+
+    <h3 style="margin:15px 0;">
+      답글
+    </h3>
+
+    <div id="modal-post-replies"></div>
+
+  </div>
+
+</div>
+
 
 <!-- ══════════════════════════════════════════════
      테마 토글 버튼 (우측 하단 고정)
