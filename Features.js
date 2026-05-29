@@ -97,61 +97,30 @@ async function loadGalleryData(page) {
     /* 로그인한 사용자의 캐릭터 ID (본인 글에만 삭제 버튼 표시) */
     var myCharId = currentUser ? charOwners[currentUser.email] : null;
 
+    /* 모달 조회용 전역 저장 */
+    window._galleryPostsMap = {};
+    window._galleryReplies  = replies;
+    window._galleryMyCharId = myCharId;
+    currPosts.forEach(function (p) { window._galleryPostsMap[p.id] = p; });
+
     var html = '';
 
     currPosts.forEach(function (post) {
-
-        var isMine    = myCharId === post.char_id;
-        var deleteBtn = isMine
-            ? '<button class="btn-reply" onclick="deleteGalleryPost(' + post.id + ')">삭제</button>'
-            : '';
-
-        var postReplies = replies.filter(function (r) { return r.parent_id == post.id; });
-        var replyCount  = postReplies.length;
-
-        /* 답글이 1개 이상이면 토글 버튼 생성 */
-        var toggleBtn = replyCount > 0
-            ? '<button class="btn-toggle-replies" onclick="toggleReplies(' + post.id + ')">답글 ' + replyCount + '개 보기</button>'
-            : '';
-
-        /* 각 답글을 reply-item div 로 변환 */
-        var repliesHtml = postReplies.map(function (r) {
-            var isReplyMine    = myCharId === r.char_id;
-            var replyDeleteBtn = isReplyMine
-                ? '<button class="btn-reply" style="padding:4px 10px;font-size:0.75rem;margin-top:0;" onclick="deleteGalleryPost(' + r.id + ')">삭제</button>'
-                : '';
-            return '<div class="reply-item">' +
-                (r.image_url
-                    ? '<img src="' + r.image_url + '" class="reply-img" onclick="openLightbox(this.src)">'
-                    : '') +
-                '<div class="post-info">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-                        '<div class="post-author" style="font-size:0.9rem;margin-bottom:0;">' + r.char_name + '</div>' +
-                        replyDeleteBtn +
-                    '</div>' +
-                    '<div class="post-content" style="font-size:0.9rem;margin-top:5px;">' + (r.content || '') + '</div>' +
-                '</div></div>';
-        }).join('');
+        var replyCount = replies.filter(function (r) { return r.parent_id == post.id; }).length;
+        var title      = post.title || '(제목 없음)';
 
         html +=
-            '<div class="gallery-post-container">' +
+            '<div class="gallery-post-container" style="cursor:pointer;" onclick="openGalleryPostModal(' + post.id + ')">' +
                 '<div class="post-main">' +
-                    (post.image_url
-                        ? '<img src="' + post.image_url + '" class="post-img" onclick="openLightbox(this.src)">'
-                        : '') +
                     '<div class="post-info">' +
                         '<div class="post-author">' + post.char_name + '</div>' +
-                        '<div class="post-date">'   + new Date(post.created_at).toLocaleString() + '</div>' +
-                        '<div class="post-content">' + (post.content || '') + '</div>' +
-                        '<div style="display:flex;gap:10px;margin-top:10px;align-items:center;">' +
-                            '<button class="btn-reply" onclick="showReplyForm(' + post.id + ')">답글 달기</button>' +
-                            deleteBtn +
-                        '</div>' +
-                        toggleBtn +
+                        '<div style="font-size:1rem;color:#ccc;font-weight:bold;margin:4px 0;">' + title + '</div>' +
+                        '<div class="post-date">' + new Date(post.created_at).toLocaleString() + '</div>' +
+                        (replyCount > 0
+                            ? '<div style="font-size:0.8rem;color:#666;margin-top:4px;">답글 ' + replyCount + '개</div>'
+                            : '') +
                     '</div>' +
                 '</div>' +
-                /* 답글 컨테이너 — 기본 숨김, toggleReplies() 로 열고 닫음 */
-                '<div class="post-replies" id="replies-' + post.id + '" style="display:none;">' + repliesHtml + '</div>' +
             '</div>';
     });
 
@@ -223,6 +192,7 @@ window.uploadGalleryPost = async function () {
     var myCharId = charOwners[currentUser.email];
     if (!myCharId)                     return alert('권한이 없습니다.');
 
+    var title     = document.getElementById('gal-title') ? document.getElementById('gal-title').value.trim() : '';
     var content   = document.getElementById('gal-content').value;
     var fileInput = document.getElementById('gal-file');
     if (!content && fileInput.files.length === 0) return alert('내용이나 이미지를 입력해주세요.');
@@ -247,6 +217,7 @@ window.uploadGalleryPost = async function () {
     var res = await supabaseClient.from('gallery_posts').insert([{
         char_id:   myCharId,
         char_name: charName,
+        title:     title,
         content:   content,
         image_url: uploadedUrl,
         parent_id: null,               /* 본문이므로 null */
@@ -256,6 +227,7 @@ window.uploadGalleryPost = async function () {
     if (res.error) {
         alert('저장 실패');
     } else {
+        if (document.getElementById('gal-title')) document.getElementById('gal-title').value = '';
         document.getElementById('gal-content').value = '';
         document.getElementById('gal-file').value    = '';
         if (fileInput.files.length > 0) { event.target.innerText = '기록'; event.target.disabled = false; }
@@ -339,6 +311,82 @@ window.deleteGalleryPost = async function (postId) {
     var res = await supabaseClient.from('gallery_posts').delete().eq('id', postId);
     if (res.error) alert('삭제 실패');
     else           loadGalleryData(currentGalleryPage);
+};
+
+/*
+ * [함수] openGalleryPostModal
+ *
+ * 게시글 제목을 클릭하면 제목·내용·작성시기·답글을 모달로 표시합니다.
+ *
+ * 매개변수:
+ *   postId — 표시할 게시글의 DB id
+ */
+window.openGalleryPostModal = function (postId) {
+    var post = window._galleryPostsMap && window._galleryPostsMap[postId];
+    if (!post) return;
+
+    var replies  = (window._galleryReplies || []).filter(function (r) { return r.parent_id == postId; });
+    var myCharId = window._galleryMyCharId;
+    var isMine   = myCharId && myCharId === post.char_id;
+
+    document.getElementById('gal-post-modal-title').textContent   = post.title || '(제목 없음)';
+    document.getElementById('gal-post-modal-author').textContent  = post.char_name;
+    document.getElementById('gal-post-modal-date').textContent    = new Date(post.created_at).toLocaleString();
+    document.getElementById('gal-post-modal-content').textContent = post.content || '';
+
+    var imgEl = document.getElementById('gal-post-modal-img');
+    if (post.image_url) {
+        imgEl.src           = post.image_url;
+        imgEl.style.display = 'block';
+    } else {
+        imgEl.style.display = 'none';
+    }
+
+    var deleteBtn = document.getElementById('gal-post-modal-delete');
+    if (isMine) {
+        deleteBtn.style.display = 'inline-block';
+        deleteBtn.onclick = async function () {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            var res = await supabaseClient.from('gallery_posts').delete().eq('id', postId);
+            if (res.error) { alert('삭제 실패'); return; }
+            closeModal('gallery-post-modal');
+            loadGalleryData(currentGalleryPage);
+        };
+    } else {
+        deleteBtn.style.display = 'none';
+    }
+
+    document.getElementById('gal-post-modal-reply').onclick = function () {
+        closeModal('gallery-post-modal');
+        showReplyForm(postId);
+    };
+
+    var repliesContainer = document.getElementById('gal-post-modal-replies');
+    if (replies.length > 0) {
+        repliesContainer.innerHTML = replies.map(function (r) {
+            var isReplyMine = myCharId && myCharId === r.char_id;
+            return '<div class="reply-item">' +
+                (r.image_url
+                    ? '<img src="' + r.image_url + '" class="reply-img" onclick="openLightbox(this.src)">'
+                    : '') +
+                '<div class="post-info">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                        '<div class="post-author" style="font-size:0.9rem;margin-bottom:0;">' + r.char_name + '</div>' +
+                        (isReplyMine
+                            ? '<button class="btn-reply" style="padding:4px 10px;font-size:0.75rem;margin-top:0;" onclick="deleteGalleryPost(' + r.id + ');closeModal(\'gallery-post-modal\')">삭제</button>'
+                            : '') +
+                    '</div>' +
+                    '<div class="post-content" style="font-size:0.9rem;margin-top:5px;">' + (r.content || '') + '</div>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+        repliesContainer.style.display = 'flex';
+    } else {
+        repliesContainer.innerHTML    = '';
+        repliesContainer.style.display = 'none';
+    }
+
+    document.getElementById('gallery-post-modal').classList.add('show');
 };
 
 
